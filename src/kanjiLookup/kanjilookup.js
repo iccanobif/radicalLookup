@@ -1,19 +1,6 @@
 const radicalToKanji = require("./radicalToKanji.js").radicalToKanji
 const radicalDescriptions = require("./radicalDescriptions.js").radicalDescriptions
 
-// This can be moved to a utility library
-Array.prototype.uniq = function ()
-{
-    return this
-        .sort()
-        .reduce((acc, val) =>
-        {
-            if (acc[acc.length - 1] != val)
-                acc.push(val)
-            return acc
-        }, [])
-}
-
 const getKanjiFromRadicalName = (radicalName) =>
 {
     return radicalDescriptions
@@ -34,12 +21,13 @@ module.exports.getKanjiFromRadicalNames = (radicalNames) =>
 {
     return radicalNames
         .map(name => getKanjiFromRadicalName(name))
-        .flat()
-        .sort()
-        .reduce((acc, val) =>
-        {
-            if (acc[acc.length - 1] != val)
-                acc.push(val)
-            return acc
-        }, [])
+        .reduce((acc, val) => {
+            const output = []
+            acc = new Set(acc)
+            val.forEach(x => {
+                if (acc.has(x))
+                    output.push(x)
+            })
+            return output
+        })
 }

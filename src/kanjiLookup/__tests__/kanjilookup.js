@@ -26,8 +26,9 @@ test("getKanjiFromRadicalName", () =>
 test("getKanjiFromRadicalNames", () =>
 {
   const womanRoofKanjiList = kanjiLookup.getKanjiFromRadicalNames(["woman", "roof"])
-  expect(womanRoofKanjiList).toContain("家")
+  expect(womanRoofKanjiList).toContain("安")
   expect(womanRoofKanjiList).toContain("嫁")
   expect(womanRoofKanjiList).not.toContain("人")
+  expect(womanRoofKanjiList).not.toContain("家")
 })
 

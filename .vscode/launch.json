@@ -6,7 +6,8 @@
             "request": "launch",
             "name": "Debug unit tests",
             "program": "${workspaceFolder}/src/node_modules/jest/bin/jest.js",
-            "cwd": "${workspaceFolder}/src"
+            "cwd": "${workspaceFolder}/src",
+            "args": ["--runInBand"]
         }
     ]
 }

@@ -1,10 +1,12 @@
 const fs = require("fs")
 const readline = require("readline")
 
+
+// http://kanjicafe.com/downloads/kradfile-u.gz
 console.log("Starting...")
 const radicalToKanji = {}
 const lineReaderKradfile = readline.createInterface({
-    input: fs.createReadStream("../../datasets/kradfile.utf8")
+    input: fs.createReadStream("../../datasets/kradfile-u")
 })
 
 lineReaderKradfile.on("line", (line) =>

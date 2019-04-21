@@ -4,7 +4,7 @@ const readline = require("readline")
 console.log("Starting...")
 const radicalToKanji = {}
 const lineReaderKradfile = readline.createInterface({
-    input: fs.createReadStream("../datasets/kradfile.utf8")
+    input: fs.createReadStream("../../datasets/kradfile.utf8")
 })
 
 lineReaderKradfile.on("line", (line) =>
@@ -36,7 +36,7 @@ lineReaderKradfile.on("close", () =>
 const radicalDescriptions = []
 
 const lineReaderRadicalCatalogue= readline.createInterface({
-    input: fs.createReadStream("../datasets/radicals.utf8")
+    input: fs.createReadStream("../../datasets/radicals.utf8")
 })
 
 lineReaderRadicalCatalogue.on("line", (line) =>

@@ -14,6 +14,15 @@ test("radicalDescriptions", () =>
   expect(radicalDescriptions).toContainEqual({ "radical": "宀", "descriptions": "roof" })
 })
 
+test("Check if there are radicals in kradfile for which I don't have a description", () =>
+{
+  const radicalsWhichHaveADescription = radicalDescriptions.map(x => x.radical)
+
+  Object.keys(radicalToKanji).forEach(radical => {
+    expect(radicalsWhichHaveADescription).toContain(radical)
+  })
+})
+
 test("getKanjiFromRadicalName", () =>
 {
   const getKanjiFromRadicalName = kanjiLookup.__get__("getKanjiFromRadicalName");

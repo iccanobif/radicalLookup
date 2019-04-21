@@ -1,7 +1,6 @@
 const fs = require("fs")
 const readline = require("readline")
 
-
 // http://kanjicafe.com/downloads/kradfile-u.gz
 console.log("Starting...")
 const radicalToKanji = {}

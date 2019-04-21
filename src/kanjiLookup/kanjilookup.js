@@ -22,7 +22,7 @@ module.exports.getKanjiFromRadicalNames = (radicalNames) =>
     return radicalNames
         .map(name => getKanjiFromRadicalName(name))
         .reduce((acc, val) => {
-            const output = []
+            const output = [] 
             acc = new Set(acc)
             val.forEach(x => {
                 if (acc.has(x))

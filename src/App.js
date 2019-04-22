@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TextInput } from 'react-native'
+import
+{
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  FlatList
+} from 'react-native'
 import { getKanjiFromRadicalNames } from "./kanjiLookup/kanjilookup.js"
 
 export default class App extends Component
@@ -7,7 +14,10 @@ export default class App extends Component
   constructor(props)
   {
     super(props)
-    this.state = { kanjiFromRadicals: "" }
+    this.state = {
+      kanjiFromRadicals: [],
+      kanjiRadicalsInputSpecified: false
+    }
   }
   render()
   {
@@ -20,16 +30,31 @@ export default class App extends Component
           onChangeText={(text =>
           {
             this.setState({
+              kanjiRadicalsInputSpecified: text.trim().length > 0,
               kanjiFromRadicals:
                 getKanjiFromRadicalNames(text.toLocaleLowerCase().split(","))
-                  .join(",")
-                  .substr(0, 200)
+                  .map(kanji =>
+                  {
+                    return {
+                      key: kanji
+                    }
+                  })
             })
-          })}></TextInput>
-        <Text style={{ color: textColor }}>{this.state.kanjiFromRadicals.length}</Text>
-        <Text style={{ color: textColor, fontSize: 30 }}>
-          {this.state.kanjiFromRadicals}
+          })} />
+        <Text style={{ color: textColor }}>
+          {
+            this.state.kanjiRadicalsInputSpecified
+              ? this.state.kanjiFromRadicals.length + " results"
+              : "Please type something..."
+          }
         </Text>
+        <FlatList
+          data={this.state.kanjiFromRadicals}
+          renderItem={({ item }) =>
+            <Text style={{ color: textColor, fontSize: 30 }}>
+              {item.key}
+            </Text>}
+        />
       </View>
     );
   }

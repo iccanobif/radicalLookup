@@ -14,7 +14,7 @@ export default class App extends Component
     return (
       <View style={styles.container}>
         <TextInput
-          style={{color: "red", borderColor: "white", borderWidth: 3}}
+          style={styles.textInput}
           autoCapitalize={"none"}
           autoCorrect={false}
           onChangeText={(text =>
@@ -28,23 +28,30 @@ export default class App extends Component
                     .substr(0, 200)
             })
           })}></TextInput>
-        <Text style={{color: "red"}}>{this.state.kanjiFromRadicals.length}</Text>
-        <Text style={{color: "red", fontSize: 30}}>
+        <Text style={{ color: textColor }}>{this.state.kanjiFromRadicals.length}</Text>
+        <Text style={{ color: textColor, fontSize: 30 }}>
           {this.state.kanjiFromRadicals}
         </Text>
       </View>
     );
   }
 }
+const textColor = "black";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "stretch",
-    backgroundColor: "#000000",
+    backgroundColor: "#fff3dd",
     padding: 20
   },
+  textInput: {
+    color: textColor,
+    borderColor: "#aa6e00",
+    borderWidth: 3,
+    fontSize: 30
+  }
   // welcome: {
   //   fontSize: 20,
   //   textAlign: 'center',

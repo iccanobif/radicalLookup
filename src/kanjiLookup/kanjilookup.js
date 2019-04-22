@@ -20,6 +20,8 @@ const getKanjiFromRadicalName = (radicalName) =>
 module.exports.getKanjiFromRadicalNames = (radicalNames) =>
 {
     return radicalNames
+        .map(x => x.trim())
+        .filter(x => x != "")
         .map(name => getKanjiFromRadicalName(name))
         .reduce((acc, val) => {
             const output = [] 

@@ -21,11 +21,9 @@ export default class App extends Component
           {
             this.setState({
               kanjiFromRadicals:
-                this.state.radicalsToSearch == ""
-                  ? ""
-                  : getKanjiFromRadicalNames(text.toLocaleLowerCase().split(","))
-                    .join(",")
-                    .substr(0, 200)
+                getKanjiFromRadicalNames(text.toLocaleLowerCase().split(","))
+                  .join(",")
+                  .substr(0, 200)
             })
           })}></TextInput>
         <Text style={{ color: textColor }}>{this.state.kanjiFromRadicals.length}</Text>

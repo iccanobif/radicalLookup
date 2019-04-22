@@ -1,5 +1,6 @@
 import { radicalToKanji } from "../radicalToKanji.js";
 import { radicalDescriptions } from "../radicalDescriptions.js";
+import { kanjiToStrokeCount } from "../kanjiToStrokeCount";
 const rewire = require("rewire");
 const kanjiLookup = rewire("../kanjilookup.js");
 
@@ -12,6 +13,13 @@ test("radicalToKanji", () =>
 test("radicalDescriptions", () =>
 {
   expect(radicalDescriptions).toContainEqual({ "radical": "宀", "descriptions": "roof" })
+})
+
+test("kanjiToStrokeCount", () =>
+{
+  expect(kanjiToStrokeCount["一"]).toBe(1)
+  expect(kanjiToStrokeCount["二"]).toBe(2)
+  expect(kanjiToStrokeCount["鬱"]).toBe(29)
 })
 
 test("Check if there are radicals in kradfile for which I don't have a description", () =>
@@ -41,8 +49,14 @@ test("getKanjiFromRadicalNames", () =>
   expect(womanRoofKanjiList).toContain("鼹")
   expect(womanRoofKanjiList).not.toContain("人")
   expect(womanRoofKanjiList).not.toContain("家")
-})
 
+  const wKanjiList = kanjiLookup.getKanjiFromRadicalNames(["w"])
+  for (let i = 0; i < wKanjiList.length - 1; i++)
+  {
+    expect(kanjiToStrokeCount[wKanjiList[i]])
+      .toBeLessThanOrEqual(kanjiToStrokeCount[wKanjiList[i + 1]])
+  }
+})
 
 // test("if radical R is included in kanji K1, and kanji K1 is also a radical for kanji K2, then radical R is a radical for kanji K2 too", () =>
 // {

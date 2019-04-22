@@ -8,6 +8,14 @@
             "program": "${workspaceFolder}/src/node_modules/jest/bin/jest.js",
             "cwd": "${workspaceFolder}/src",
             "args": ["--runInBand"]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Generate Repos",
+            "program": "${workspaceFolder}/src/kanjiLookup/generateRepos.js",
+            "cwd": "${workspaceFolder}/src/kanjiLookup",
+            "args": ["--runInBand"]
         }
     ]
 }

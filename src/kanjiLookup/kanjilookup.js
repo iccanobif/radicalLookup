@@ -1,5 +1,6 @@
 const radicalToKanji = require("./radicalToKanji.js").radicalToKanji
 const radicalDescriptions = require("./radicalDescriptions.js").radicalDescriptions
+const kanjiToStrokeCount = require("./kanjiToStrokeCount").kanjiToStrokeCount
 
 const getKanjiFromRadicalName = (radicalName) =>
 {
@@ -19,17 +20,33 @@ const getKanjiFromRadicalName = (radicalName) =>
 // radicalNames must be a list of names of radicals
 module.exports.getKanjiFromRadicalNames = (radicalNames) =>
 {
-    return radicalNames
+    // Clean input
+    radicalNames = radicalNames
         .map(x => x.trim())
         .filter(x => x != "")
+
+    if (radicalNames.length == 0)
+        return []
+
+    return radicalNames
         .map(name => getKanjiFromRadicalName(name))
-        .reduce((acc, val) => {
-            const output = [] 
+        .reduce((acc, val) => // Only include kanji that are linked to all specified radical names 
+        {
+            const output = []
             acc = new Set(acc)
-            val.forEach(x => {
+            val.forEach(x =>
+            {
                 if (acc.has(x))
                     output.push(x)
             })
             return output
+        })
+        .sort((a, b) => 
+        {
+            const strokeComparison = kanjiToStrokeCount[a] - kanjiToStrokeCount[b]
+            if (strokeComparison != 0)
+                return strokeComparison
+            else
+                return a.codePointAt(0) - b.codePointAt(0)
         })
 }

@@ -5,16 +5,22 @@ import
   Text,
   View,
   TextInput,
-  TouchableHighlight
+  TouchableHighlight,
+  VirtualizedList
 } from 'react-native'
 import { getKanjiFromRadicalNames } from "./kanjiLookup/kanjilookup.js"
+import { timer } from 'rxjs';
 
 export default class App extends Component
 {
   constructor(props)
   {
     super(props)
-    this.state = { kanjiFromRadicals: [] }
+    this.state = {
+      kanjiFromRadicals: [],
+      isLoading: false,
+      kanjiRadicalsInputSpecified: false
+    }
   }
   render()
   {
@@ -26,20 +32,34 @@ export default class App extends Component
           autoCorrect={false}
           onChangeText={(text =>
           {
-            this.setState({
-              kanjiFromRadicals:
-                getKanjiFromRadicalNames(text.toLocaleLowerCase().split(","))
-            })
+            // TODO: If it's already loading, put the request on hold
+            //       If it's already loading and there's another request on hold, replace the old request with this one
+            //       if it's not already loading, load now
+            this.setState({ isLoading: true })
+            setTimeout(() =>
+            {
+              this.setState({
+                kanjiRadicalsInputSpecified: text.trim().length > 0,
+                kanjiFromRadicals:
+                  getKanjiFromRadicalNames(text.toLocaleLowerCase().split(",")),
+                isLoading: false
+              })
+            }, 0)
           })}></TextInput>
-        <Text style={{ color: textColor }}>{this.state.kanjiFromRadicals.length}</Text>
+        <Text style={{ color: textColor }}>
+          {this.state.isLoading ? "Loading..." : "Ready."}
+        </Text>
+        <Text style={{ color: textColor }}>
+          {
+            this.state.kanjiRadicalsInputSpecified
+              ? this.state.kanjiFromRadicals.length + " results"
+              : "Please type something..."
+          } </Text>
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           {this.state.kanjiFromRadicals.slice(0, 100).map((kanji) =>
           {
             return (
-              <TouchableHighlight key={kanji} onPress={() =>
-              {
-                alert(kanji)
-              }}>
+              <TouchableHighlight key={kanji} onPress={() => { alert(kanji) }}>
                 <View style={{ padding: 10 }}>
                   <Text style={{ color: textColor, fontSize: 30 }} >
                     {kanji}
@@ -48,7 +68,6 @@ export default class App extends Component
               </TouchableHighlight>)
           })}
         </View>
-
       </View>
     );
   }

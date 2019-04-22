@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, View, TextInput } from 'react-native'
+import
+{
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableHighlight
+} from 'react-native'
 import { getKanjiFromRadicalNames } from "./kanjiLookup/kanjilookup.js"
 
 export default class App extends Component
@@ -7,7 +14,7 @@ export default class App extends Component
   constructor(props)
   {
     super(props)
-    this.state = { kanjiFromRadicals: "" }
+    this.state = { kanjiFromRadicals: [] }
   }
   render()
   {
@@ -22,14 +29,26 @@ export default class App extends Component
             this.setState({
               kanjiFromRadicals:
                 getKanjiFromRadicalNames(text.toLocaleLowerCase().split(","))
-                  .join(",")
-                  .substr(0, 200)
             })
           })}></TextInput>
         <Text style={{ color: textColor }}>{this.state.kanjiFromRadicals.length}</Text>
-        <Text style={{ color: textColor, fontSize: 30 }}>
-          {this.state.kanjiFromRadicals}
-        </Text>
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {this.state.kanjiFromRadicals.slice(0, 100).map((kanji) =>
+          {
+            return (
+              <TouchableHighlight key={kanji} onPress={() =>
+              {
+                alert(kanji)
+              }}>
+                <View style={{ padding: 10 }}>
+                  <Text style={{ color: textColor, fontSize: 30 }} >
+                    {kanji}
+                  </Text>
+                </View>
+              </TouchableHighlight>)
+          })}
+        </View>
+
       </View>
     );
   }

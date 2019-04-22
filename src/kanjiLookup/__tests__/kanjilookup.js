@@ -18,7 +18,8 @@ test("Check if there are radicals in kradfile for which I don't have a descripti
 {
   const radicalsWhichHaveADescription = radicalDescriptions.map(x => x.radical)
 
-  Object.keys(radicalToKanji).forEach(radical => {
+  Object.keys(radicalToKanji).forEach(radical =>
+  {
     expect(radicalsWhichHaveADescription).toContain(radical)
   })
 })
@@ -42,3 +43,17 @@ test("getKanjiFromRadicalNames", () =>
   expect(womanRoofKanjiList).not.toContain("家")
 })
 
+
+// test("if radical R is included in kanji K1, and kanji K1 is also a radical for kanji K2, then radical R is a radical for kanji K2 too", () =>
+// {
+//   Object.keys(radicalToKanji)
+//     .forEach(R =>
+//     {
+//       radicalToKanji[R].forEach(K1 => {
+//         if (K1 in radicalToKanji)
+//           radicalToKanji[R].forEach(K2 => {
+//             expect(radicalToKanji[R]).toContain(K2)
+//           })
+//       })
+//     })
+// })

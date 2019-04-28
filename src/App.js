@@ -33,6 +33,10 @@ export default class App extends Component
           autoCorrect={false}
           onChangeText={(text =>
           {
+            // this onChangeText callback isn't called on every keystroke, if while the user is typing the
+            // javascript thread is blocked by some CPU-intensive task, at the end of the operation it'll
+            // receive only one ChangeText "event" with the current text.
+
             // TODO: If it's already loading, put the request on hold
             //       If it's already loading and there's another request on hold, replace the old request with this one
             //       if it's not already loading, load now

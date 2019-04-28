@@ -13,14 +13,58 @@ import Toast from "./Toast.js"
 
 export default class App extends Component
 {
-  constructor(props)
+  // constructor(props)
+  // {
+  //   super(props)
+  // }
+
+  state = {
+    kanjiFromRadicals: [],
+    isLoading: false,
+    kanjiRadicalsInputSpecified: false,
+    log: "",
+    lastTimestamp: Date.now()
+  }
+
+  writeLog = (text, showTimeDifferenceFromLastLog) => 
   {
-    super(props)
-    this.state = {
-      kanjiFromRadicals: [],
-      isLoading: false,
-      kanjiRadicalsInputSpecified: false
-    }
+    const logMessage = showTimeDifferenceFromLastLog
+      ? (Date.now() - this.state.lastTimestamp) / 1000 + " " + text + "...\n" + this.state.log
+      : text + "...\n" + this.state.log;
+
+    this.setState({
+      log: logMessage,
+      lastTimestamp: Date.now()
+    })
+  }
+
+  onRadicalNamesChanged = (text) =>
+  {
+
+    // this onChangeText callback isn't called on every keystroke, if while the user is typing the
+    // javascript thread is blocked by some CPU-intensive task, at the end of the operation it'll
+    // receive only one ChangeText "event" with the current text.
+
+    // TODO: If it's already loading, put the request on hold
+    //       If it's already loading and there's another request on hold, replace the old request with this one
+    //       if it's not already loading, load now
+    this.writeLog("starting loading " + text + "...", false)
+    this.setState({ isLoading: true })
+    setTimeout(() =>
+    {
+      const kanjiFromRadicals = getKanjiFromRadicalNames(text.toLocaleLowerCase().split(","))
+      this.writeLog("finished loading " + text + "...", true)
+      this.setState({ isLoading: false })
+      setTimeout(() =>
+      {
+        this.writeLog("finished rendering " + text + "...", true)
+        this.setState({
+          kanjiRadicalsInputSpecified: text.trim().length > 0,
+          kanjiFromRadicals: kanjiFromRadicals,
+          isLoading: false
+        })
+      }, 0)
+    }, 0)
   }
 
   render()
@@ -31,26 +75,7 @@ export default class App extends Component
           style={styles.textInput}
           autoCapitalize={"none"}
           autoCorrect={false}
-          onChangeText={(text =>
-          {
-            // this onChangeText callback isn't called on every keystroke, if while the user is typing the
-            // javascript thread is blocked by some CPU-intensive task, at the end of the operation it'll
-            // receive only one ChangeText "event" with the current text.
-
-            // TODO: If it's already loading, put the request on hold
-            //       If it's already loading and there's another request on hold, replace the old request with this one
-            //       if it's not already loading, load now
-            this.setState({ isLoading: true })
-            setTimeout(() =>
-            {
-              this.setState({
-                kanjiRadicalsInputSpecified: text.trim().length > 0,
-                kanjiFromRadicals:
-                  getKanjiFromRadicalNames(text.toLocaleLowerCase().split(",")),
-                isLoading: false
-              })
-            }, 0)
-          })}></TextInput>
+          onChangeText={this.onRadicalNamesChanged}></TextInput>
         <Text style={{ color: textColor }}>
           {this.state.isLoading ? "Loading..." : "Ready."}
         </Text>
@@ -59,9 +84,13 @@ export default class App extends Component
             this.state.kanjiRadicalsInputSpecified
               ? this.state.kanjiFromRadicals.length + " results"
               : "Please type something..."
-          } </Text>
+          }
+        </Text>
+        {/* <Text style={{ color: textColor }}>
+          {this.state.log}
+        </Text> */}
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {this.state.kanjiFromRadicals.slice(0, 100).map((kanji) =>
+          {this.state.kanjiFromRadicals.slice(0, 5).map((kanji) =>
           {
             return (
               <TouchableHighlight key={kanji} onPress={() =>
@@ -98,14 +127,4 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     fontSize: 30
   }
-  // welcome: {
-  //   fontSize: 20,
-  //   textAlign: 'center',
-  //   margin: 10,
-  // },
-  // instructions: {
-  //   textAlign: 'center',
-  //   color: '#333333',
-  //   marginBottom: 5,
-  // },
 });

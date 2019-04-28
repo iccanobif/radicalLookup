@@ -6,7 +6,8 @@ import
   View,
   TextInput,
   TouchableHighlight,
-  VirtualizedList
+  VirtualizedList,
+  Clipboard
 } from 'react-native'
 import { getKanjiFromRadicalNames } from "./kanjiLookup/kanjilookup.js"
 import { timer } from 'rxjs';
@@ -22,6 +23,7 @@ export default class App extends Component
       kanjiRadicalsInputSpecified: false
     }
   }
+
   render()
   {
     return (
@@ -59,7 +61,11 @@ export default class App extends Component
           {this.state.kanjiFromRadicals.slice(0, 100).map((kanji) =>
           {
             return (
-              <TouchableHighlight key={kanji} onPress={() => { alert(kanji) }}>
+              <TouchableHighlight key={kanji} onPress={() =>
+              {
+                Clipboard.setString(kanji)
+                alert("Copied " + kanji + " to clipboard.")
+              }}>
                 <View style={{ padding: 10 }}>
                   <Text style={{ color: textColor, fontSize: 30 }} >
                     {kanji}

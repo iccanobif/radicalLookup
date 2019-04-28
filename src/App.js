@@ -6,11 +6,10 @@ import
   View,
   TextInput,
   TouchableHighlight,
-  VirtualizedList,
   Clipboard
 } from 'react-native'
 import { getKanjiFromRadicalNames } from "./kanjiLookup/kanjilookup.js"
-import { timer } from 'rxjs';
+import Toast from "./Toast.js"
 
 export default class App extends Component
 {
@@ -64,7 +63,8 @@ export default class App extends Component
               <TouchableHighlight key={kanji} onPress={() =>
               {
                 Clipboard.setString(kanji)
-                alert("Copied " + kanji + " to clipboard.")
+                // TODO On IOS this should use alert() or some other alternative
+                Toast.show("Copied " + kanji + " to clipboard.", Toast.SHORT);
               }}>
                 <View style={{ padding: 10 }}>
                   <Text style={{ color: textColor, fontSize: 30 }} >

@@ -25,13 +25,12 @@ export default class App extends Component
       if (this.state.currentRadicalInput == this.state.lastRadicalInputSearched)
         return
 
-      const text = this.state.currentRadicalInput
-      this.setState({
-        isKanjiRadicalsInputSpecified: text.trim().length > 0,
-        kanjiFromRadicals: getKanjiFromRadicalNames(text.toLocaleLowerCase().split(",")),
-        lastRadicalInputSearched: text
-      })
-    }, 100)
+      this.setState((state) => ({
+        isKanjiRadicalsInputSpecified: state.currentRadicalInput.trim().length > 0,
+        kanjiFromRadicals: getKanjiFromRadicalNames(state.currentRadicalInput.toLocaleLowerCase().split(",")),
+        lastRadicalInputSearched: state.currentRadicalInput
+      }))
+    }, 300)
   }
 
   state = {

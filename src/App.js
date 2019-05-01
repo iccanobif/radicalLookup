@@ -7,7 +7,7 @@ import
   TextInput,
   TouchableHighlight,
   Clipboard,
-  InteractionManager
+  Dimensions
 } from 'react-native'
 import { getKanjiFromRadicalNames } from "./kanjiLookup/kanjilookup.js"
 import Toast from "./Toast.js"
@@ -90,17 +90,41 @@ export default class App extends Component
 
 class KanjiGrid extends Component
 {
+  calculateKanjiPerRow = () =>
+  {
+    console.log("calculating kanji")
+    const containerWidth = Dimensions.get("window").width - styles.container.padding * 2
+    return Math.floor(containerWidth / kanjiButtonSize)
+  }
+
+  state = {
+    collapsed: true,
+    numberOfKanjiPerRow: this.calculateKanjiPerRow()
+  }
+
   render()
   {
-    return (
-      <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+    if (this.props.kanjiFromRadicals.length == 0)
+      return null
+
+    return <View
+      style={{
+        flexDirection: "row",
+        flexWrap: "wrap",
+        borderWidth: 3,
+        borderColor: bordersColor
+      }}
+      onLayout={(e) =>
+      {
+        this.setState({ numberOfKanjiPerRow: this.calculateKanjiPerRow() })
+      }} >
+      {
+        this.props.kanjiFromRadicals.slice(0, this.state.numberOfKanjiPerRow).map((kanji, index) =>
         {
-          this.props.kanjiFromRadicals.slice(0, 50).map((kanji, index) =>
-          {
-            return <KanjiButton kanji={kanji} key={index}></KanjiButton>
-          })
-        }
-      </View>)
+          return <KanjiButton kanji={kanji} key={index}></KanjiButton>
+        })
+      }
+    </View>
   }
 }
 
@@ -109,14 +133,14 @@ class KanjiButton extends Component
   render()
   {
     return <TouchableHighlight
-      style={{ width: 50, height: 50 }}
+      style={{ width: kanjiButtonSize, height: kanjiButtonSize }}
       onPress={() =>
       {
         Clipboard.setString(this.props.kanji)
         // TODO On IOS this should use alert() or some other alternative
         Toast.show("Copied " + this.props.kanji + " to clipboard.", Toast.SHORT);
       }}>
-      <View style={{ padding: 10, width: 50, height: 50 }}>
+      <View style={{ padding: 10 }}>
         <Text style={{ color: textColor, fontSize: 30 }} >
           {this.props.kanji}
         </Text>
@@ -126,7 +150,9 @@ class KanjiButton extends Component
 }
 
 
-const textColor = "black";
+const textColor = "black"
+const bordersColor = "#aa6e00"
+const kanjiButtonSize = 50
 
 const styles = StyleSheet.create({
   container: {
@@ -138,7 +164,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     color: textColor,
-    borderColor: "#aa6e00",
+    borderColor: bordersColor,
     borderWidth: 3,
     fontSize: 30
   }
